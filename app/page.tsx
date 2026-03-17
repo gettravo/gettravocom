@@ -98,28 +98,37 @@ export default async function LandingPage() {
 
   const pricing = [
     {
-      name: "Starter",
+      name: "Free",
       price: "0",
-      description: "For individual developers",
-      features: ["Monitor public APIs", "Live API status dashboard", "Basic history", "1 personal API stack"],
+      description: "For developers and hobby projects",
+      features: [
+        "Dashboard with all public APIs",
+        "Services overview (status, latency, uptime)",
+        "Incidents feed (last 7 days)",
+        "1 Stack (up to 5 APIs)",
+        "24h metric history",
+        "Email alerts (1 address)",
+        "GitHub Auto-Detection (public repos only)"
+      ],
       cta: "Start for free",
       highlight: false
     },
     {
       name: "Pro",
-      price: "10",
-      description: "For developers who want alerts",
-      features: ["Everything in Free", "Custom API stacks", "Incident alerts", "Webhook notifications", "HookTap integration", "30–90 day history"],
+      price: "9",
+      description: "For teams and production apps",
+      features: [
+        "Unlimited stack size",
+        "90 days history + Daily uptime chart",
+        "Teams — shared stack, shared alerts, invite members",
+        "All alert channels: Email + Webhook + HookTap",
+        "Private GitHub Repos for Auto-Detection",
+        "Configurable notification types (Downtime / Latency / Error Rate / Recovery)",
+        "SLA Reports (coming soon)",
+        "iOS App with Widget"
+      ],
       cta: "Try Pro",
       highlight: true
-    },
-    {
-      name: "Team",
-      price: "29",
-      description: "For teams running production apps",
-      features: ["Everything in Pro", "Multiple stacks", "Team members", "Shared alerts", "Longer history"],
-      cta: "Contact us",
-      highlight: false
     }
   ];
 
@@ -494,9 +503,9 @@ export default async function LandingPage() {
       <section id="pricing" className="py-32">
         <div className="mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-[#FF5657] font-semibold tracking-wide uppercase text-sm mb-4">Pricing</h2>
-          <h3 className="text-4xl font-bold text-white mb-6">Simple pricing for monitoring your API stack</h3>
+          <h3 className="text-4xl font-bold text-white mb-6">Simple pricing for your API stack</h3>
           <p className="text-white/60 max-w-2xl mx-auto mb-16">Choose the plan that fits your current stage.</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {pricing.map((plan, i) => (
               <div key={i} className={`relative p-10 rounded-[2.5rem] border transition-all ${plan.highlight ? 'bg-white/5 border-[#FF5657] shadow-2xl shadow-[#FF5657]/10' : 'bg-white/[0.02] border-white/5 hover:border-white/10'}`}>
                 {plan.highlight && (
@@ -507,7 +516,7 @@ export default async function LandingPage() {
                 <div className="text-xl font-bold text-white mb-2">{plan.name}</div>
                 <div className="flex items-baseline justify-center gap-1 mb-6">
                   <span className="text-4xl font-bold text-white">${plan.price}</span>
-                  {plan.price !== '0' && <span className="text-white/40 text-sm">/month</span>}
+                  {plan.price !== '0' && <span className="text-white/40 text-sm">/ month</span>}
                 </div>
                 <p className="text-white/40 text-sm mb-8 h-10">{plan.description}</p>
                 <div className="space-y-4 mb-10 text-left">
