@@ -103,12 +103,12 @@ export default async function LandingPage() {
       description: "For developers and hobby projects",
       features: [
         "Dashboard with all public APIs",
-        "Services overview (status, latency, uptime)",
-        "Incidents feed (last 7 days)",
+        "Services overview — status, latency, uptime",
+        "Incidents feed",
         "1 Stack (up to 5 APIs)",
         "24h metric history",
-        "Email alerts (1 address)",
-        "GitHub Auto-Detection (public repos only)"
+        "Email alerts",
+        "GitHub Auto-Detection (public repos)"
       ],
       cta: "Start for free",
       highlight: false
@@ -119,13 +119,11 @@ export default async function LandingPage() {
       description: "For teams and production apps",
       features: [
         "Unlimited stack size",
-        "90 days history + Daily uptime chart",
+        "7-day metric history",
         "Teams — shared stack, shared alerts, invite members",
-        "All alert channels: Email + Webhook + HookTap",
-        "Private GitHub Repos for Auto-Detection",
-        "Configurable notification types (Downtime / Latency / Error Rate / Recovery)",
-        "SLA Reports (coming soon)",
-        "iOS App with Widget"
+        "Webhook & HookTap push notification alerts",
+        "Private GitHub repos for Auto-Detection",
+        "iOS App with home screen widget"
       ],
       cta: "Try Pro",
       highlight: true
