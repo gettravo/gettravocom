@@ -12,6 +12,8 @@ const AnoAI = () => {
 
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    camera.position.z = 1;
+    
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true,
       alpha: true,
@@ -25,13 +27,14 @@ const AnoAI = () => {
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = '100%';
     renderer.domElement.style.display = 'block';
+    renderer.domElement.style.zIndex = '0';
     
     container.appendChild(renderer.domElement);
 
     const material = new THREE.ShaderMaterial({
       uniforms: {
         iTime: { value: 0 },
-        iResolution: { value: new THREE.Vector2() }
+        iResolution: { value: new THREE.Vector2(1, 1) }
       },
       vertexShader: `
         varying vec2 vUv;
@@ -44,60 +47,51 @@ const AnoAI = () => {
         uniform float iTime;
         uniform vec2 iResolution;
 
-        #define NUM_OCTAVES 5
-
-        float rand(vec2 n) {
-          return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+        float hash(vec2 p) {
+          p = fract(p * vec2(123.34, 456.21));
+          p += dot(p, p + 45.32);
+          return fract(p.x * p.y);
         }
 
-        float noise(vec2 p) {
-          vec2 ip = floor(p);
-          vec2 u = fract(p);
-          u = u*u*(3.0-2.0*u);
-
-          float res = mix(
-            mix(rand(ip), rand(ip + vec2(1.0, 0.0)), u.x),
-            mix(rand(ip + vec2(0.0, 1.0)), rand(ip + vec2(1.0, 1.0)), u.x), u.y);
-          return res * res;
-        }
-
-        float fbm(vec2 x) {
-          float v = 0.0;
-          float a = 0.5;
-          vec2 shift = vec2(100);
-          mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));
-          for (int i = 0; i < NUM_OCTAVES; ++i) {
-            v += a * noise(x);
-            x = rot * x * 2.0 + shift;
-            a *= 0.5;
-          }
-          return v;
+        float shootingStar(vec2 uv, float time, float offset) {
+          // Subtle angle
+          float angle = 0.4; 
+          mat2 rot = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
+          vec2 p = rot * uv;
+          
+          // Slower and less frequent for subtleness
+          float speed = 1.2;
+          float t = mod(time * speed + offset, 12.0); 
+          
+          // Very thin trail
+          float trail = smoothstep(0.015, 0.0, abs(p.y)) * smoothstep(1.2, 0.0, t - p.x) * smoothstep(0.0, 0.15, t - p.x);
+          
+          // Small pinpoint head
+          float head = smoothstep(0.008, 0.0, length(p - vec2(t, 0.0)));
+          
+          return (trail * 0.4 + head) * smoothstep(8.0, 7.0, t);
         }
 
         void main() {
-          vec2 p = (gl_FragCoord.xy * 2.0 - iResolution.xy) / min(iResolution.x, iResolution.y);
-          float t = iTime * 0.2;
+          vec2 res = iResolution.xy;
+          if (res.x < 1.0) res = vec2(1000.0, 1000.0);
+          vec2 uv = (gl_FragCoord.xy * 2.0 - res) / min(res.x, res.y);
           
-          vec2 uv = gl_FragCoord.xy / iResolution.xy;
+          vec3 col = vec3(0.0);
           
-          float f = fbm(p + vec2(t, t * 0.5));
-          
-          vec3 col1 = vec3(1.0, 0.33, 0.34); // #FF5657
-          vec3 col2 = vec3(0.1, 0.05, 0.2);
-          
-          vec3 finalCol = mix(col2, col1, f * 0.5);
-          
-          // Aurora-like movement
-          for(float i = 1.0; i < 4.0; i++) {
-            p.x += 0.3 / i * sin(i * 3.0 * p.y + iTime + i * 10.0);
-            p.y += 0.3 / i * cos(i * 3.0 * p.x + iTime + i * 5.0);
-            float d = length(p);
-            finalCol += col1 * 0.02 / abs(sin(d - iTime * 0.1) * i);
+          // Very subtle static background stars
+          float s = hash(uv);
+          if (s > 0.9994) {
+             col += vec3(0.8, 0.9, 1.0) * s * (0.2 + 0.8 * sin(iTime * 0.4 + s * 100.0));
           }
           
-          finalCol *= smoothstep(1.5, 0.0, length(p * 0.5));
+          // Subtle white shooting stars
+          vec3 starCol = vec3(0.95, 0.98, 1.0);
+          col += starCol * shootingStar(uv + vec2(-0.7, 0.3), iTime, 0.0);
+          col += starCol * shootingStar(uv + vec2(0.2, -0.5), iTime * 0.9, 4.0);
+          col += starCol * shootingStar(uv + vec2(0.6, 0.1), iTime * 1.1, 8.5);
           
-          gl_FragColor = vec4(finalCol, 0.6);
+          gl_FragColor = vec4(col, 1.0);
         }
       `,
       transparent: true

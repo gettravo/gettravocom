@@ -72,7 +72,7 @@ export default function DocsPage() {
               Travo is an independent API health monitoring platform for developers. It continuously monitors popular developer APIs — measuring latency, error rates, and uptime — and notifies you when something breaks.
             </p>
             <p className="text-white/60 leading-relaxed">
-              Unlike vendor status pages, Travo runs its own synthetic checks from the outside, giving you an objective view of whether an API is actually reachable and performing well from your users' perspective.
+              Unlike vendor status pages, Travo runs its own synthetic checks from the outside, giving you an objective view of whether an API is actually reachable and performing well from your users&apos; perspective.
             </p>
 
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -96,14 +96,14 @@ export default function DocsPage() {
           <section id="getting-started">
             <Pill>Getting Started</Pill>
             <h2 className="text-2xl font-bold text-white mt-4 mb-6">Getting Started</h2>
-            <p className="text-white/60 mb-8">You don't need to install anything. Travo runs entirely in the browser.</p>
+            <p className="text-white/60 mb-8">You don&apos;t need to install anything. Travo runs entirely in the browser.</p>
 
             <Steps>
               <Step n={1} title="Create a free account">
                 Go to <InlineLink href="https://app.gettravo.com">app.gettravo.com</InlineLink> and sign up with your email. No credit card required for the free tier.
               </Step>
               <Step n={2} title="View the API Status dashboard">
-                After logging in, you'll see the <strong className="text-white">Services</strong> page — a live overview of all 26 monitored APIs with their current status, latency, and uptime.
+                After logging in, you&apos;ll see the <strong className="text-white">Services</strong> page — a live overview of all 26 monitored APIs with their current status, latency, and uptime.
               </Step>
               <Step n={3} title="Set up your Stack">
                 Go to <strong className="text-white">My Stack</strong> and select the APIs your project depends on. You can either pick them manually or auto-detect them from a GitHub repository.
@@ -193,7 +193,7 @@ export default function DocsPage() {
                 Paste a GitHub repository URL and Travo automatically detects which APIs are used — see the <a href="#stack-detection" className="text-[#FF5657] hover:underline">Auto Stack Detection</a> section.
               </DocItem>
               <DocItem title="Stack status banner">
-                At the top of My Stack you'll see a banner showing whether all your stack services are healthy or if any are experiencing issues.
+                At the top of My Stack you&apos;ll see a banner showing whether all your stack services are healthy or if any are experiencing issues.
               </DocItem>
             </DocList>
           </section>

@@ -41,10 +41,10 @@ export default async function LandingPage() {
   // Pick featured APIs in defined order, fall back to mock if API unavailable
   const featuredApis: (ApiStatus & { logo: string })[] = FEATURED_SLUGS.map((slug) => {
     const logos: Record<string, string> = {
-      stripe: '/logos/stripe.svg',
-      openai: '/logos/openai.svg',
-      github: '/logos/github.svg',
-      cloudflare: '/logos/cloudflare.svg',
+      stripe: '/stripeicon.svg',
+      openai: '/openaiicon.svg',
+      github: '/githubicon.svg',
+      cloudflare: '/cloudflareicon.svg',
     };
     const found = allApis.find((a) => a.slug === slug);
     if (found) return { ...found, logo: logos[slug] };
@@ -152,6 +152,18 @@ export default async function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-[#ededed] selection:bg-[#FF5657]/30">
+      {/* Announcement Bar */}
+      <div className="relative z-[60] bg-[#FF5657] py-2 px-4 text-center">
+        <div className="flex items-center justify-center gap-4 flex-wrap">
+          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-white">
+            New: Now supporting Private and Public GitHub Repositories
+          </span>
+          <Link href="https://app.gettravo.com" className="bg-white text-[#FF5657] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full hover:bg-white/90 transition-all shadow-sm">
+            Try it now
+          </Link>
+        </div>
+      </div>
+
       {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -174,14 +186,14 @@ export default async function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-24 pb-32 min-h-[80vh] flex flex-col justify-center">
-        <div className="absolute inset-0 -z-20 w-full h-full">
+      <section className="relative overflow-hidden pt-24 pb-32 min-h-[80vh] flex flex-col justify-center z-0">
+        <div className="absolute inset-0 z-0 w-full h-full pointer-events-none">
           <AnoAI />
         </div>
-        <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 z-1 overflow-hidden pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-[1000px] bg-[#FF5657]/10 blur-[120px]" />
         </div>
-        <div className="mx-auto max-w-7xl px-6 text-center">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-[#FF5657] mb-8">
             <span className="flex h-2 w-2 rounded-full bg-[#FF5657] animate-pulse" />
             Travo: Independent API Monitoring
@@ -200,7 +212,6 @@ export default async function LandingPage() {
               View live API status
             </Link>
           </div>
-        </div>
 
         {/* Live API Stack Preview Card */}
         <div className="mx-auto mt-20 max-w-5xl px-6">
@@ -242,6 +253,7 @@ export default async function LandingPage() {
             </div>
           </div>
         </div>
+      </div>
       </section>
 
       {/* Problem Section */}
@@ -249,10 +261,10 @@ export default async function LandingPage() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-3xl">
             <h2 className="text-[#FF5657] font-semibold tracking-wide uppercase text-sm mb-4">Problem</h2>
-            <h3 className="text-4xl font-bold text-white mb-8 leading-tight">Your app depends on APIs you don't control.</h3>
+            <h3 className="text-4xl font-bold text-white mb-8 leading-tight">Your app depends on APIs you don&apos;t control.</h3>
             <div className="space-y-6 text-lg text-white/60">
-              <p>Modern apps rely on dozens of external services. When one of them slows down or goes down, your app breaks — but it's often hard to tell why.</p>
-              <p>Status pages are slow to update and logs rarely show the full picture. Travo gives you an independent view of API health so you can quickly understand what's happening.</p>
+              <p>Modern apps rely on dozens of external services. When one of them slows down or goes down, your app breaks — but it&apos;s often hard to tell why.</p>
+              <p>Status pages are slow to update and logs rarely show the full picture. Travo gives you an independent view of API health so you can quickly understand what&apos;s happening.</p>
             </div>
           </div>
         </div>
@@ -559,24 +571,59 @@ export default async function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-12">
-        <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-3">
-            <img src="/whitelogo.png" alt="Travo Logo" className="h-5 w-auto" />
-            <span className="text-white/20">|</span>
-            <Link href="https://hooktap.me" target="_blank" className="text-xs font-medium text-white/40 hover:text-white transition-colors">
-              A HookTap Product
-            </Link>
-          </div>
-          <div className="flex gap-12 text-sm text-white/40 font-medium">
-            <Link href="#" className="hover:text-white transition-colors">Status</Link>
-            <Link href="/docs" className="hover:text-white transition-colors">Documentation</Link>
-            <Link href="https://hooktap.me/en/privacy" target="_blank" className="hover:text-white transition-colors">Privacy Policy</Link>
+      <footer className="border-t border-white/5 pt-24 pb-12 bg-black">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 mb-16">
+            <div className="col-span-2">
+              <Link href="/" className="inline-block mb-2">
+                <img src="/whitelogo.png" alt="Travo Logo" className="h-6 w-auto" />
+              </Link>
+              <div className="mb-6">
+                <Link href="https://hooktap.me" target="_blank" className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 hover:text-white/40 transition-colors">
+                  A HookTap Product
+                </Link>
+              </div>
+              <p className="text-white/40 text-sm leading-relaxed max-w-xs mb-6">
+                Independent API health monitoring for the modern stack. Know when your dependencies break, before your users do.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="text-xs font-bold text-white uppercase tracking-widest mb-6">Product</h4>
+              <ul className="space-y-4">
+                <li><Link href="#features" className="text-sm text-white/40 hover:text-white transition-colors">Features</Link></li>
+                <li><Link href="#dashboard" className="text-sm text-white/40 hover:text-white transition-colors">Dashboard</Link></li>
+                <li><Link href="#pricing" className="text-sm text-white/40 hover:text-white transition-colors">Pricing</Link></li>
+                <li><Link href="https://app.gettravo.com" className="text-sm text-white/40 hover:text-white transition-colors">Sign In</Link></li>
+              </ul>
+            </div>
 
-            <Link href="https://hooktap.me/en/terms" target="_blank" className="hover:text-white transition-colors">Terms of Service</Link>
+            <div>
+              <h4 className="text-xs font-bold text-white uppercase tracking-widest mb-6">Resources</h4>
+              <ul className="space-y-4">
+                <li><Link href="/docs" className="text-sm text-white/40 hover:text-white transition-colors">Documentation</Link></li>
+                <li><Link href="/docs#api" className="text-sm text-white/40 hover:text-white transition-colors">API Reference</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-bold text-white uppercase tracking-widest mb-6">Company</h4>
+              <ul className="space-y-4">
+                <li><Link href="https://hooktap.me" target="_blank" className="text-sm text-white/40 hover:text-white transition-colors">About HookTap</Link></li>
+                <li><Link href="https://hooktap.me/en/privacy" target="_blank" className="text-sm text-white/40 hover:text-white transition-colors">Privacy</Link></li>
+                <li><Link href="https://hooktap.me/en/terms" target="_blank" className="text-sm text-white/40 hover:text-white transition-colors">Terms</Link></li>
+              </ul>
+            </div>
           </div>
-          <div className="text-xs text-white/20">
-            © {new Date().getFullYear()} HookTap Inc. All rights reserved.
+          
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-white/20">© {new Date().getFullYear()} HookTap Inc. All rights reserved.</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/5 text-[10px] font-medium text-white/40 uppercase tracking-widest">
+              <span className="flex h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+              All Systems Operational
+            </div>
           </div>
         </div>
       </footer>
