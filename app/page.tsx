@@ -618,6 +618,7 @@ export default async function LandingPage() {
               <ul className="space-y-4">
                 <li><Link href="https://hooktap.me" target="_blank" className="text-sm text-white/40 hover:text-white transition-colors">About HookTap</Link></li>
                 <li><Link href="https://hooktap.me/en/privacy" target="_blank" className="text-sm text-white/40 hover:text-white transition-colors">Privacy</Link></li>
+                <li><Link href="https://hooktap.me/en/imprint">Imprint</Link></li>
                 <li><Link href="https://hooktap.me/en/terms" target="_blank" className="text-sm text-white/40 hover:text-white transition-colors">Terms</Link></li>
               </ul>
             </div>
