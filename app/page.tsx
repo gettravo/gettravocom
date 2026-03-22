@@ -16,6 +16,7 @@ import {
   Activity,
 } from 'lucide-react';
 import AnoAI from "@/components/ui/animated-shader-background";
+import ScrollPath from "@/components/ui/ScrollPath";
 import {
   fetchAllStatus,
   fetchMetrics,
@@ -173,7 +174,8 @@ export default async function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#ededed] selection:bg-[#FF5657]/30">
+    <div className="relative min-h-screen bg-[#0a0a0a] text-[#ededed] selection:bg-[#FF5657]/30">
+      <ScrollPath />
       {/* Announcement Bar */}
       <div className="relative z-[60] bg-[#FF5657] py-2 px-4 text-center">
         <div className="flex items-center justify-center gap-4 flex-wrap">
