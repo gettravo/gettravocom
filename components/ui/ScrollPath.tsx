@@ -16,10 +16,11 @@ export default function ScrollPath() {
     let raf: number
 
     function update() {
+      if (!pathRef.current) return
       const scrollTop = window.scrollY
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight
       const progress = maxScroll > 0 ? Math.min(scrollTop / maxScroll, 1) : 0
-      path.style.strokeDashoffset = `${totalLength * (1 - progress)}`
+      pathRef.current.style.strokeDashoffset = `${totalLength * (1 - progress)}`
     }
 
     function onScroll() {
