@@ -73,28 +73,6 @@ export default async function LandingPage() {
   const avgBucket = latencyBuckets.filter(Boolean).reduce((s, v) => s + v, 0) / (latencyBuckets.filter(Boolean).length || 1);
   const spikeThreshold = avgBucket * 2;
 
-  const features = [
-    {
-      title: "Real-time API health monitoring",
-      description: "Travo continuously checks popular developer APIs and measures latency, error rates and uptime so you can instantly see when something goes wrong.",
-      icon: <Activity className="w-6 h-6" />
-    },
-    {
-      title: "Monitor your own API stack",
-      description: "Select the services your app depends on and track their health in one place. Quickly see whether an issue comes from your code or an external provider.",
-      icon: <Layers className="w-6 h-6" />
-    },
-    {
-      title: "Automatic stack detection",
-      description: "Connect a GitHub repository and Travo analyzes common dependency files to detect the APIs and services used in your project. No manual setup required.",
-      icon: <Github className="w-6 h-6" />
-    },
-    {
-      title: "Instant alerts",
-      description: "Get notified when an API becomes unstable or unavailable. Alerts can be sent via webhooks or directly through HookTap.",
-      icon: <Bell className="w-6 h-6" />
-    }
-  ];
 
   const pricing = [
     {
@@ -360,16 +338,117 @@ export default async function LandingPage() {
               Travo provides independent data and intelligent analysis for your entire software stack.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {features.map((feature, i) => (
-              <div key={i} className="group p-10 rounded-3xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-all hover:border-[#FF5657]/20">
-                <div className="w-12 h-12 rounded-xl bg-[#FF5657]/10 flex items-center justify-center text-[#FF5657] mb-6 group-hover:scale-110 transition-transform">
-                  {feature.icon}
-                </div>
-                <h4 className="text-xl font-bold text-white mb-3">{feature.title}</h4>
-                <p className="text-white/40 leading-relaxed text-sm">{feature.description}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* Card 1 — Real-time monitoring: latency bar chart */}
+            <div className="group rounded-3xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-[#FF5657]/20 transition-all overflow-hidden">
+              <div className="h-44 bg-white/[0.02] border-b border-white/5 px-6 flex items-end gap-[3px] pb-5 pt-6">
+                {[18,32,24,40,28,35,20,44,30,26,38,22,48,34,28,42,36,24,52,30,26,44,20,38,32].map((h, i) => (
+                  <div
+                    key={i}
+                    className="flex-1 rounded-sm transition-all"
+                    style={{
+                      height: `${h}%`,
+                      background: h > 45
+                        ? 'rgba(255,86,87,0.7)'
+                        : h > 35
+                        ? 'rgba(251,191,36,0.5)'
+                        : 'rgba(74,222,128,0.35)',
+                    }}
+                  />
+                ))}
               </div>
-            ))}
+              <div className="p-8">
+                <div className="w-10 h-10 rounded-xl bg-[#FF5657]/10 flex items-center justify-center text-[#FF5657] mb-5 group-hover:scale-110 transition-transform">
+                  <Activity className="w-5 h-5" />
+                </div>
+                <h4 className="text-lg font-bold text-white mb-2">Real-time API health monitoring</h4>
+                <p className="text-white/40 leading-relaxed text-sm">Travo continuously checks popular developer APIs and measures latency, error rates and uptime so you can instantly see when something goes wrong.</p>
+              </div>
+            </div>
+
+            {/* Card 2 — My Stack: API list with status dots */}
+            <div className="group rounded-3xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-[#FF5657]/20 transition-all overflow-hidden">
+              <div className="h-44 bg-white/[0.02] border-b border-white/5 px-6 py-5 flex flex-col justify-center gap-2">
+                {[
+                  { name: 'Stripe', latency: '142ms', status: 'green' },
+                  { name: 'OpenAI', latency: '834ms', status: 'yellow' },
+                  { name: 'GitHub', latency: '201ms', status: 'green' },
+                  { name: 'Supabase', latency: '98ms', status: 'green' },
+                ].map((api) => (
+                  <div key={api.name} className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/5">
+                    <div className="flex items-center gap-2.5">
+                      <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${api.status === 'green' ? 'bg-green-400' : 'bg-yellow-400'}`} />
+                      <span className="text-xs font-medium text-white/70">{api.name}</span>
+                    </div>
+                    <span className={`text-xs font-mono ${api.status === 'yellow' ? 'text-yellow-400/70' : 'text-white/30'}`}>{api.latency}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="p-8">
+                <div className="w-10 h-10 rounded-xl bg-[#FF5657]/10 flex items-center justify-center text-[#FF5657] mb-5 group-hover:scale-110 transition-transform">
+                  <Layers className="w-5 h-5" />
+                </div>
+                <h4 className="text-lg font-bold text-white mb-2">Monitor your own API stack</h4>
+                <p className="text-white/40 leading-relaxed text-sm">Select the services your app depends on and track their health in one place. Quickly see whether an issue comes from your code or an external provider.</p>
+              </div>
+            </div>
+
+            {/* Card 3 — Stack detection: code snippet */}
+            <div className="group rounded-3xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-[#FF5657]/20 transition-all overflow-hidden">
+              <div className="h-44 bg-white/[0.02] border-b border-white/5 px-6 py-5 font-mono text-xs flex flex-col justify-center gap-1.5">
+                <div className="text-white/20">{`"dependencies": {`}</div>
+                <div className="flex items-center gap-2 pl-4">
+                  <span className="text-white/50">{`"stripe": "^14.0",`}</span>
+                  <span className="text-[10px] text-green-400 bg-green-400/10 px-1.5 py-0.5 rounded">detected</span>
+                </div>
+                <div className="flex items-center gap-2 pl-4">
+                  <span className="text-white/50">{`"openai": "^4.0",`}</span>
+                  <span className="text-[10px] text-green-400 bg-green-400/10 px-1.5 py-0.5 rounded">detected</span>
+                </div>
+                <div className="flex items-center gap-2 pl-4">
+                  <span className="text-white/50">{`"@supabase/supabase-js": ...`}</span>
+                  <span className="text-[10px] text-green-400 bg-green-400/10 px-1.5 py-0.5 rounded">detected</span>
+                </div>
+                <div className="text-white/20">{`}`}</div>
+              </div>
+              <div className="p-8">
+                <div className="w-10 h-10 rounded-xl bg-[#FF5657]/10 flex items-center justify-center text-[#FF5657] mb-5 group-hover:scale-110 transition-transform">
+                  <Github className="w-5 h-5" />
+                </div>
+                <h4 className="text-lg font-bold text-white mb-2">Automatic stack detection</h4>
+                <p className="text-white/40 leading-relaxed text-sm">Connect a GitHub repository and Travo analyzes common dependency files to detect the APIs and services used in your project. No manual setup required.</p>
+              </div>
+            </div>
+
+            {/* Card 4 — Alerts: notification mockup */}
+            <div className="group rounded-3xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-[#FF5657]/20 transition-all overflow-hidden">
+              <div className="h-44 bg-white/[0.02] border-b border-white/5 px-6 py-5 flex flex-col justify-center gap-3">
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-[#FF5657]/10 border border-[#FF5657]/20">
+                  <span className="text-base leading-none mt-0.5">🔴</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-semibold text-white">Stripe — Downtime</span>
+                      <span className="text-[10px] text-white/30 flex-shrink-0">just now</span>
+                    </div>
+                    <p className="text-[11px] text-white/40 mt-0.5">Last 3 consecutive checks failed.</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 px-1">
+                  {['Email', 'Webhook', 'HookTap'].map((ch) => (
+                    <span key={ch} className="text-[10px] text-white/30 bg-white/5 border border-white/8 px-2 py-1 rounded-md">{ch}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="p-8">
+                <div className="w-10 h-10 rounded-xl bg-[#FF5657]/10 flex items-center justify-center text-[#FF5657] mb-5 group-hover:scale-110 transition-transform">
+                  <Bell className="w-5 h-5" />
+                </div>
+                <h4 className="text-lg font-bold text-white mb-2">Instant alerts</h4>
+                <p className="text-white/40 leading-relaxed text-sm">Get notified when an API becomes unstable or unavailable. Alerts can be sent via email, webhooks, or directly through HookTap.</p>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
