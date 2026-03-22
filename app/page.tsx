@@ -278,6 +278,39 @@ export default async function LandingPage() {
       </div>
       </section>
 
+      {/* Stats Bar */}
+      <div className="border-t border-white/5 bg-gradient-to-b from-white/[0.03] to-transparent">
+        <div className="mx-auto max-w-5xl px-6 py-10">
+          <div className="flex flex-col sm:flex-row items-center justify-center divide-y sm:divide-y-0 sm:divide-x divide-white/5">
+            {[
+              {
+                value: allApis.length > 0 ? `${allApis.length}+` : '60+',
+                label: 'APIs monitored',
+              },
+              {
+                value: allApis.length > 0
+                  ? `${[...new Set(allApis.map((a) => a.category))].length}`
+                  : '10',
+                label: 'Categories',
+              },
+              {
+                value: `${avgUptime}%`,
+                label: 'Avg uptime',
+              },
+              {
+                value: '< 1 min',
+                label: 'Check interval',
+              },
+            ].map((stat) => (
+              <div key={stat.label} className="flex flex-col items-center gap-0.5 px-10 py-4 sm:py-0">
+                <span className="text-2xl font-bold text-white tracking-tight">{stat.value}</span>
+                <span className="text-xs text-white/30 uppercase tracking-widest">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Problem Section */}
       <section id="problem" className="py-32 border-y border-white/5 bg-white/[0.01]">
         <div className="mx-auto max-w-7xl px-6">
@@ -311,42 +344,6 @@ export default async function LandingPage() {
                   alt={logo.alt}
                   className="max-h-full max-w-full object-contain brightness-0 invert opacity-40 hover:opacity-100 transition-all duration-300"
                 />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20 border-b border-white/5">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5 rounded-3xl overflow-hidden">
-            {[
-              {
-                value: `${allApis.length > 0 ? `${allApis.length}+` : '60+'}`,
-                label: 'APIs monitored',
-                sub: 'across all categories',
-              },
-              {
-                value: `${allApis.length > 0 ? [...new Set(allApis.map((a) => a.category))].length : 10}`,
-                label: 'Categories covered',
-                sub: 'AI, Payments, Cloud & more',
-              },
-              {
-                value: `${avgUptime}%`,
-                label: 'Avg uptime right now',
-                sub: 'across all monitored APIs',
-              },
-              {
-                value: 'Every min',
-                label: 'Check frequency',
-                sub: 'latency, uptime & errors',
-              },
-            ].map((stat) => (
-              <div key={stat.label} className="bg-black px-8 py-10 flex flex-col gap-1">
-                <span className="text-4xl font-bold text-white tracking-tight">{stat.value}</span>
-                <span className="text-sm font-semibold text-white/60">{stat.label}</span>
-                <span className="text-xs text-white/20">{stat.sub}</span>
               </div>
             ))}
           </div>
