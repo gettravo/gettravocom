@@ -1,5 +1,9 @@
 import Link from 'next/link'
 import { ArrowLeft, Terminal, Zap, Bell, Layers, Github, Globe, Key, Download, ChevronRight } from 'lucide-react'
+import { fetchAllStatus } from '@/lib/travo-api'
+import CopyPromptButton from '@/components/docs/CopyPromptButton'
+
+export const revalidate = 60
 
 const sections = [
   { id: 'introduction', label: 'Introduction' },
@@ -15,7 +19,14 @@ const sections = [
   { id: 'faq', label: 'FAQ' },
 ]
 
-export default function DocsPage() {
+export default async function DocsPage() {
+  const allApis = await fetchAllStatus()
+  const apiCount = allApis.length > 0 ? allApis.length : 60
+  const categoryCount = allApis.length > 0 ? [...new Set(allApis.map((a) => a.category))].length : 10
+  const categories = allApis.length > 0
+    ? [...new Set(allApis.map((a) => a.category))].join(', ')
+    : 'AI, Payments, Cloud, Database, Auth, Communication, Search, Monitoring, Analytics, Media, Maps, Productivity, Commerce'
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-[#ededed]">
       {/* Top nav */}
@@ -77,7 +88,7 @@ export default function DocsPage() {
 
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
-                { icon: <Globe className="w-5 h-5" />, label: '26 APIs monitored', desc: 'Across AI, payments, cloud, auth, and more' },
+                { icon: <Globe className="w-5 h-5" />, label: `${apiCount}+ APIs monitored`, desc: `Across ${categoryCount} categories including AI, payments, cloud, and more` },
                 { icon: <Zap className="w-5 h-5" />, label: 'Checked every minute', desc: 'Staggered synthetic checks around the clock' },
                 { icon: <Bell className="w-5 h-5" />, label: 'Instant alerts', desc: 'Email, webhook, and HookTap push notifications' },
               ].map((item) => (
@@ -103,7 +114,7 @@ export default function DocsPage() {
                 Go to <InlineLink href="https://app.gettravo.com">app.gettravo.com</InlineLink> and sign up with your email. No credit card required for the free tier.
               </Step>
               <Step n={2} title="View the API Status dashboard">
-                After logging in, you&apos;ll see the <strong className="text-white">Services</strong> page — a live overview of all 26 monitored APIs with their current status, latency, and uptime.
+                After logging in, you&apos;ll see the <strong className="text-white">Services</strong> page — a live overview of all {apiCount}+ monitored APIs with their current status, latency, and uptime.
               </Step>
               <Step n={3} title="Set up your Stack">
                 Go to <strong className="text-white">My Stack</strong> and select the APIs your project depends on. You can either pick them manually or auto-detect them from a GitHub repository.
@@ -146,7 +157,7 @@ export default function DocsPage() {
             <Pill>Services</Pill>
             <h2 className="text-2xl font-bold text-white mt-4 mb-6">Services Page</h2>
             <p className="text-white/60 mb-6">
-              The <strong className="text-white">Services</strong> page shows all 26 monitored APIs with real-time status, latency, and 24h uptime.
+              The <strong className="text-white">Services</strong> page shows all {apiCount}+ monitored APIs with real-time status, latency, and 24h uptime.
             </p>
             <DocList>
               <DocItem title="Search">
@@ -448,6 +459,35 @@ Content-Type: application/json
             <p className="text-xs text-white/30 mt-6">
               Base URL: <code className="text-[#FF5657]">https://app.gettravo.com</code>
             </p>
+
+            <h3 className="text-base font-semibold text-white mt-10 mb-4">Code examples</h3>
+
+            <p className="text-sm text-white/50 mb-3">JavaScript / TypeScript</p>
+            <CodeBlock>{`const res = await fetch('https://app.gettravo.com/api-routes/status')
+const apis = await res.json()
+
+const stripe = apis.find(a => a.slug === 'stripe')
+console.log(stripe.latestMetric.latencyMs) // e.g. 142
+console.log(stripe.uptime24h)              // e.g. 99.93
+console.log(stripe.activeIncident)         // null or { severity, type }`}</CodeBlock>
+
+            <p className="text-sm text-white/50 mt-6 mb-3">Python</p>
+            <CodeBlock>{`import requests
+
+res = requests.get('https://app.gettravo.com/api-routes/status')
+apis = res.json()
+
+stripe = next(a for a in apis if a['slug'] == 'stripe')
+print(stripe['latestMetric']['latencyMs'])
+print(stripe['uptime24h'])
+print(stripe['activeIncident'])`}</CodeBlock>
+
+            <p className="text-sm text-white/50 mt-6 mb-3">cURL</p>
+            <CodeBlock>{`curl https://app.gettravo.com/api-routes/status
+curl https://app.gettravo.com/api-routes/metrics/stripe
+curl https://app.gettravo.com/api-routes/incidents/openai`}</CodeBlock>
+
+            <CopyPromptButton />
           </section>
 
           <Divider />
@@ -476,7 +516,7 @@ Content-Type: application/json
                 },
                 {
                   q: 'What APIs does Travo monitor?',
-                  a: 'Travo monitors 26 APIs across 9 categories: AI (OpenAI, Anthropic, HuggingFace, Replicate), Payments (Stripe, PayPal, Braintree), Cloud (Vercel, Cloudflare, Railway, Fly.io), Database (Supabase, PlanetScale, Neon, Upstash, Firebase), Auth (Auth0), Communication (Resend, SendGrid, Twilio, Slack, Discord), DevTools (GitHub), Productivity (Notion, Linear), and Commerce (Shopify).',
+                  a: `Travo monitors ${apiCount}+ APIs across ${categoryCount} categories: ${categories}. The list is continuously growing.`,
                 },
                 {
                   q: 'How is this different from vendor status pages?',
