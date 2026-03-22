@@ -14,6 +14,7 @@ const sections = [
   { id: 'integrations-hooktap', label: 'HookTap Integration' },
   { id: 'integrations-webhook', label: 'Webhook Integration' },
   { id: 'api', label: 'Status API' },
+  { id: 'teams', label: 'Teams' },
   { id: 'faq', label: 'FAQ' },
 ]
 

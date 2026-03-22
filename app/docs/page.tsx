@@ -138,7 +138,7 @@ export default async function DocsPage() {
                 Show only Operational, Degraded, or Down APIs.
               </DocItem>
               <DocItem title="Category filter">
-                Filter by category: AI, Payments, Cloud, DevTools, Database, Auth, Communication, Productivity, or Commerce.
+                Filter by category: AI, Payments, Cloud, DevTools, Database, Auth, Communication, Search, Monitoring, Analytics, Media, Maps, Productivity, or Commerce.
               </DocItem>
               <DocItem title="Auto-refresh">
                 Data is polled every 30 seconds so status changes appear without a page reload.
@@ -168,11 +168,14 @@ export default async function DocsPage() {
               My Stack lets you create a personal monitoring view of only the APIs your project depends on. This makes it easy to quickly diagnose whether a problem is in your own code or caused by an external service.
             </p>
             <DocList>
+              <DocItem title="Stack name">
+                Give your stack a name to identify it — e.g. the name of your project or app. It&apos;s auto-filled when you detect from a GitHub repository.
+              </DocItem>
               <DocItem title="Manual selection">
                 Browse all available APIs and check the ones you use.
               </DocItem>
               <DocItem title="Auto-detection">
-                Paste a GitHub repository URL and Travo automatically detects which APIs are used — see the <a href="#stack-detection" className="text-[#FF5657] hover:underline">Auto Stack Detection</a> section.
+                Connect GitHub and Travo automatically detects which APIs are used in your repository — see the <a href="#stack-detection" className="text-[#FF5657] hover:underline">Auto Stack Detection</a> section.
               </DocItem>
               <DocItem title="Stack status banner">
                 At the top of My Stack you&apos;ll see a banner showing whether all your stack services are healthy or if any are experiencing issues.
@@ -194,13 +197,20 @@ export default async function DocsPage() {
               <Step n={1} title="Go to My Stack → Edit Stack">
                 Click the <strong className="text-white">Edit Stack</strong> button on your stack page.
               </Step>
-              <Step n={2} title="Enter your GitHub repository URL">
-                Paste a public GitHub repository URL, e.g. <code className="text-[#FF5657] text-xs">https://github.com/yourname/yourrepo</code>
+              <Step n={2} title="Connect GitHub or paste a URL">
+                If you signed in with GitHub, a dropdown shows your repositories directly — including private ones. Otherwise paste any public GitHub repository URL, e.g. <code className="text-[#FF5657] text-xs">https://github.com/yourname/yourrepo</code>
               </Step>
               <Step n={3} title="Detect dependencies">
-                Click <strong className="text-white">Detect from GitHub</strong>. Travo analyzes your dependency files and pre-selects matching APIs.
+                Click <strong className="text-white">Detect from GitHub</strong>. Travo analyzes your dependency files and pre-selects matching APIs. The stack name is auto-filled from the repository name.
               </Step>
             </Steps>
+
+            <div className="mt-6 bg-white/[0.03] border border-white/8 rounded-xl p-4 flex gap-3">
+              <span className="text-[#FF5657] text-lg leading-none mt-0.5">ⓘ</span>
+              <p className="text-sm text-white/50 leading-relaxed">
+                <strong className="text-white">Private repositories</strong> are supported when you sign in with GitHub and grant repository access during the OAuth flow. You can choose between public-only or public + private access at login.
+              </p>
+            </div>
 
             <h3 className="text-base font-semibold text-white mt-8 mb-3">Supported dependency files</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -258,17 +268,23 @@ export default async function DocsPage() {
               Configure notification channels in the <strong className="text-white">Alerts</strong> page. Alerts are sent when a new incident is detected for any API.
             </p>
             <DocList>
-              <DocItem title="Alert triggers">
-                Notifications are sent for three event types: API Downtime, High Error Rate, and Latency Spikes — matching the incident detection logic above.
+              <DocItem title="Notification channels">
+                Three channels are available: <strong className="text-white">Email</strong>, <strong className="text-white">Webhook</strong>, and <strong className="text-white">HookTap</strong>. Each can be enabled or disabled independently.
+              </DocItem>
+              <DocItem title="Notification type filters">
+                For each channel you can choose which event types trigger a notification: <strong className="text-white">Downtime</strong>, <strong className="text-white">High Error Rate</strong>, <strong className="text-white">Latency Spike</strong>, and <strong className="text-white">Resolved</strong>. This lets you reduce noise — e.g. only get paged for critical downtime, not latency warnings.
               </DocItem>
               <DocItem title="Email">
                 Enter your email address and enable email notifications. Emails are sent from <code className="text-xs text-[#FF5657]">notifications@mail.gettravo.com</code>.
               </DocItem>
               <DocItem title="Webhook">
-                Provide an HTTP endpoint URL. Travo will POST a JSON payload when an incident is detected. See the <a href="#integrations-webhook" className="text-[#FF5657] hover:underline">Webhook Integration</a> section.
+                Provide an HTTP endpoint URL. Travo will POST a JSON payload when an incident is detected or resolved. See the <a href="#integrations-webhook" className="text-[#FF5657] hover:underline">Webhook Integration</a> section.
               </DocItem>
               <DocItem title="HookTap">
                 Enter your HookTap Hook ID to receive instant iPhone push notifications. See the <a href="#integrations-hooktap" className="text-[#FF5657] hover:underline">HookTap Integration</a> section.
+              </DocItem>
+              <DocItem title="Test alerts">
+                Use the <strong className="text-white">Send test</strong> buttons on the Alerts page to verify each channel is working before a real incident occurs.
               </DocItem>
             </DocList>
           </section>
@@ -337,11 +353,12 @@ Content-Type: application/json
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {[
-                    ['type', 'string', 'Always "incident"'],
+                    ['type', 'string', '"incident" or "resolved"'],
                     ['api', 'string', 'API slug, e.g. "stripe", "openai"'],
                     ['severity', 'string', '"critical" or "warning"'],
                     ['incidentType', 'string', '"downtime", "error_rate", or "latency"'],
                     ['message', 'string', 'Human-readable description of the incident'],
+                    ['resolved', 'boolean', 'true when this notification is a resolution event'],
                     ['startedAt', 'string', 'ISO 8601 timestamp when the incident was detected'],
                   ].map(([field, type, desc]) => (
                     <tr key={field}>
@@ -463,6 +480,34 @@ curl https://app.gettravo.com/api-routes/incidents/openai`}</CodeBlock>
 
           <Divider />
 
+          {/* Teams */}
+          <section id="teams">
+            <Pill>Teams</Pill>
+            <h2 className="text-2xl font-bold text-white mt-4 mb-6">Teams</h2>
+            <p className="text-white/60 mb-6">
+              Teams let you share a monitoring stack and alert configuration with colleagues. All team members see the same API status and receive the same notifications.
+            </p>
+            <DocList>
+              <DocItem title="Create a team">
+                Go to <strong className="text-white">Team</strong> in the sidebar and click <strong className="text-white">Create team</strong>. Give it a name and you&apos;ll become the team owner.
+              </DocItem>
+              <DocItem title="Invite members">
+                From the Team page, enter a colleague&apos;s email address to send them an invite link. They can join via the link without needing to know your account details.
+              </DocItem>
+              <DocItem title="Join a team">
+                Open the invite link you received. If you don&apos;t have a Travo account yet, you&apos;ll be prompted to sign up first.
+              </DocItem>
+              <DocItem title="Leave a team">
+                You can leave a team at any time from the Team settings page.
+              </DocItem>
+              <DocItem title="Shared history">
+                Team plans retain 14 days of metric history, giving your team enough context to investigate recurring incidents.
+              </DocItem>
+            </DocList>
+          </section>
+
+          <Divider />
+
           {/* FAQ */}
           <section id="faq">
             <Pill>FAQ</Pill>
@@ -483,11 +528,15 @@ curl https://app.gettravo.com/api-routes/incidents/openai`}</CodeBlock>
                 },
                 {
                   q: 'How long is data retained?',
-                  a: 'Raw metrics are stored for 7 days. The Starter plan shows basic history; Pro and Team plans provide 30–90 day history.',
+                  a: 'Raw metrics are retained for 14 days. This applies to all plans and gives teams enough history to investigate recurring incidents.',
                 },
                 {
                   q: 'What APIs does Travo monitor?',
                   a: `Travo monitors ${apiCount}+ APIs across ${categoryCount} categories: ${categories}. The list is continuously growing.`,
+                },
+                {
+                  q: 'Can I monitor private GitHub repositories?',
+                  a: 'Yes. Sign in with GitHub and grant repository access during the OAuth flow. You can choose public-only or public + private access. Travo uses your GitHub token to read dependency files from private repos — it never stores your code.',
                 },
                 {
                   q: 'How is this different from vendor status pages?',
