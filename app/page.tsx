@@ -457,39 +457,93 @@ export default async function LandingPage() {
             <h2 className="text-[#FF5657] font-semibold tracking-wide uppercase text-sm mb-4">Process</h2>
             <h3 className="text-4xl font-bold text-white">How it works</h3>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+
+          {/* Desktop: horizontal timeline */}
+          <div className="hidden md:block">
+            {/* Connector row */}
+            <div className="relative flex items-center justify-between mb-12 px-[calc(100%/6)]">
+              {/* Line behind the dots */}
+              <div className="absolute inset-x-[calc(100%/6)] top-1/2 -translate-y-1/2 h-px bg-gradient-to-r from-[#FF5657]/40 via-white/10 to-[#FF5657]/40" />
+              {[
+                { n: '1', icon: <Activity className="w-5 h-5" /> },
+                { n: '2', icon: <AlertCircle className="w-5 h-5" /> },
+                { n: '3', icon: <History className="w-5 h-5" /> },
+              ].map((s) => (
+                <div key={s.n} className="relative z-10 flex flex-col items-center gap-3">
+                  <div className="w-14 h-14 rounded-full bg-[#0a0a0a] border-2 border-[#FF5657]/60 flex items-center justify-center shadow-[0_0_24px_rgba(255,86,87,0.25)]">
+                    <span className="text-[#FF5657]">{s.icon}</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-[#FF5657]/50 uppercase tracking-widest">Step {s.n}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Content row */}
+            <div className="grid grid-cols-3 gap-8">
+              {[
+                {
+                  title: 'Continuous monitoring',
+                  desc: 'Travo performs synthetic checks every minute against all monitored APIs — measuring latency, status codes, and error rates around the clock.',
+                },
+                {
+                  title: 'Metrics & incident detection',
+                  desc: 'Each check is stored and analysed. Latency spikes, rising error rates, and consecutive failures automatically trigger an incident.',
+                },
+                {
+                  title: 'Alerts and insights',
+                  desc: 'You get notified immediately via email, webhook, or push notification, and can dig into 14 days of historical metrics to understand the impact.',
+                },
+              ].map((item, i) => (
+                <div key={i} className="text-center px-4">
+                  <h4 className="text-lg font-bold text-white mb-3">{item.title}</h4>
+                  <p className="text-white/40 text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile: vertical timeline */}
+          <div className="md:hidden flex flex-col gap-0">
             {[
               {
-                step: "1",
-                title: "Continuous monitoring",
-                desc: "Travo performs synthetic checks against supported APIs from multiple locations.",
-                icon: <Activity className="w-6 h-6" />
+                n: '1',
+                icon: <Activity className="w-5 h-5" />,
+                title: 'Continuous monitoring',
+                desc: 'Travo performs synthetic checks every minute against all monitored APIs — measuring latency, status codes, and error rates around the clock.',
               },
               {
-                step: "2",
-                title: "Metrics & incident detection",
-                desc: "Latency spikes, error increases and outages are automatically detected.",
-                icon: <AlertCircle className="w-6 h-6" />
+                n: '2',
+                icon: <AlertCircle className="w-5 h-5" />,
+                title: 'Metrics & incident detection',
+                desc: 'Each check is stored and analysed. Latency spikes, rising error rates, and consecutive failures automatically trigger an incident.',
               },
               {
-                step: "3",
-                title: "Alerts and insights",
-                desc: "You get notified immediately and can investigate the issue using historical metrics.",
-                icon: <History className="w-6 h-6" />
-              }
-            ].map((item, i) => (
-              <div key={i} className="relative p-8">
-                <div className="absolute top-0 left-0 text-6xl font-black text-white/5 -translate-y-4">{item.step}</div>
-                <div className="relative z-10">
-                  <div className="w-12 h-12 rounded-xl bg-[#FF5657]/10 flex items-center justify-center text-[#FF5657] mb-6">
-                    {item.icon}
+                n: '3',
+                icon: <History className="w-5 h-5" />,
+                title: 'Alerts and insights',
+                desc: 'You get notified immediately via email, webhook, or push notification, and can dig into 14 days of historical metrics to understand the impact.',
+              },
+            ].map((item, i, arr) => (
+              <div key={i} className="flex gap-6">
+                {/* Left: dot + line */}
+                <div className="flex flex-col items-center">
+                  <div className="w-12 h-12 rounded-full bg-[#0a0a0a] border-2 border-[#FF5657]/60 flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(255,86,87,0.2)]">
+                    <span className="text-[#FF5657]">{item.icon}</span>
                   </div>
-                  <h4 className="text-xl font-bold text-white mb-3">{item.title}</h4>
+                  {i < arr.length - 1 && (
+                    <div className="w-px flex-1 my-2 bg-gradient-to-b from-[#FF5657]/30 to-white/5" />
+                  )}
+                </div>
+                {/* Right: content */}
+                <div className="pb-10 pt-2">
+                  <span className="text-[10px] font-bold text-[#FF5657]/50 uppercase tracking-widest">Step {item.n}</span>
+                  <h4 className="text-lg font-bold text-white mt-1 mb-2">{item.title}</h4>
                   <p className="text-white/40 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               </div>
             ))}
           </div>
+
         </div>
       </section>
 
