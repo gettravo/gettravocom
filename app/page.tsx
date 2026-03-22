@@ -317,6 +317,42 @@ export default async function LandingPage() {
         </div>
       </section>
 
+      {/* Stats Section */}
+      <section className="py-20 border-b border-white/5">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5 rounded-3xl overflow-hidden">
+            {[
+              {
+                value: `${allApis.length > 0 ? `${allApis.length}+` : '60+'}`,
+                label: 'APIs monitored',
+                sub: 'across all categories',
+              },
+              {
+                value: `${allApis.length > 0 ? [...new Set(allApis.map((a) => a.category))].length : 10}`,
+                label: 'Categories covered',
+                sub: 'AI, Payments, Cloud & more',
+              },
+              {
+                value: `${avgUptime}%`,
+                label: 'Avg uptime right now',
+                sub: 'across all monitored APIs',
+              },
+              {
+                value: 'Every min',
+                label: 'Check frequency',
+                sub: 'latency, uptime & errors',
+              },
+            ].map((stat) => (
+              <div key={stat.label} className="bg-black px-8 py-10 flex flex-col gap-1">
+                <span className="text-4xl font-bold text-white tracking-tight">{stat.value}</span>
+                <span className="text-sm font-semibold text-white/60">{stat.label}</span>
+                <span className="text-xs text-white/20">{stat.sub}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section id="features" className="py-32">
         <div className="mx-auto max-w-7xl px-6">
