@@ -1,23 +1,11 @@
 import Link from 'next/link'
-import { ArrowLeft, Terminal, Zap, Bell, Layers, Github, Globe, Key, Download, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Terminal, Zap, Bell, Layers, Github, Globe, Key, Download } from 'lucide-react'
 import { fetchAllStatus } from '@/lib/travo-api'
 import CopyPromptButton from '@/components/docs/CopyPromptButton'
+import DocsSidebar from '@/components/docs/DocsSidebar'
 
 export const revalidate = 60
 
-const sections = [
-  { id: 'introduction', label: 'Introduction' },
-  { id: 'getting-started', label: 'Getting Started' },
-  { id: 'dashboard', label: 'Dashboard' },
-  { id: 'my-stack', label: 'My Stack' },
-  { id: 'stack-detection', label: 'Auto Stack Detection' },
-  { id: 'incidents', label: 'Incidents' },
-  { id: 'alerts', label: 'Alerts & Notifications' },
-  { id: 'integrations-hooktap', label: 'HookTap Integration' },
-  { id: 'integrations-webhook', label: 'Webhook Integration' },
-  { id: 'api', label: 'Status API' },
-  { id: 'faq', label: 'FAQ' },
-]
 
 export default async function DocsPage() {
   const allApis = await fetchAllStatus()
@@ -53,24 +41,7 @@ export default async function DocsPage() {
       </nav>
 
       <div className="mx-auto max-w-7xl px-6 py-16 flex gap-12">
-        {/* Sidebar */}
-        <aside className="hidden lg:block w-56 flex-shrink-0">
-          <div className="sticky top-28">
-            <p className="text-xs font-semibold text-white/30 uppercase tracking-widest mb-4">On this page</p>
-            <nav className="space-y-1">
-              {sections.map((s) => (
-                <a
-                  key={s.id}
-                  href={`#${s.id}`}
-                  className="flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors py-1.5 group"
-                >
-                  <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 text-[#FF5657] transition-opacity" />
-                  {s.label}
-                </a>
-              ))}
-            </nav>
-          </div>
-        </aside>
+        <DocsSidebar />
 
         {/* Content */}
         <main className="flex-1 min-w-0 max-w-3xl space-y-20">
