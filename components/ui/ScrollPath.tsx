@@ -18,8 +18,8 @@ export default function ScrollPath() {
     function update() {
       if (!pathRef.current) return
       const scrollTop = window.scrollY
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
-      const progress = maxScroll > 0 ? Math.min(scrollTop / maxScroll, 1) : 0
+      const docHeight = document.documentElement.scrollHeight
+      const progress = Math.min((scrollTop + window.innerHeight / 2) / docHeight, 1)
       pathRef.current.style.strokeDashoffset = `${totalLength * (1 - progress)}`
     }
 
@@ -53,16 +53,10 @@ export default function ScrollPath() {
       </defs>
       <path
         ref={pathRef}
-        d="M 50 0
-           C 50 2,  18 6,  15 12
-           C 12 18, 84 24, 85 30
-           C 86 36, 16 45, 15 52
-           C 14 59, 84 65, 85 72
-           C 86 79, 52 86, 50 93
-           C 48 97, 50 99, 50 100"
+        d="M 50 0 L 50 100"
         stroke="#FF5657"
-        strokeWidth="0.25"
-        strokeOpacity="0.4"
+        strokeWidth="0.2"
+        strokeOpacity="0.35"
         fill="none"
         strokeLinecap="round"
         filter="url(#path-glow)"
